@@ -90,10 +90,10 @@ takes into account a lower bound on the cost from the current state
 to the goal.
 
 ```
-aStarGraphSearch :: forall cost state. (Real cost, Ord state) =>
+aStarSearch :: forall cost state. (Real cost, Ord state) =>
                     (state -> [(state,cost)]) -> (state -> cost) -> state ->
                     (state -> Bool) -> (Maybe ([state],cost),SearchStats)
-aStarGraphSearch expandState heuristic startState isGoal
+aStarSearch expandState heuristic startState isGoal
 ```
 
 There are also Iterative deepening A* and Memory-bounded A* searches.

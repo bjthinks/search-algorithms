@@ -84,10 +84,20 @@ uniformCostGraphSearch expandState startState isGoal =
                      (S.insert current_state explored_set)
                      (SearchStats (n+1) (s-1+length from_here))
 
-aStarGraphSearch :: forall cost state. (Real cost, Ord state) =>
-                    (state -> [(state,cost)]) -> (state -> cost) -> state ->
-                    (state -> Bool) -> (Maybe ([state],cost),SearchStats)
-aStarGraphSearch expandState heuristic startState isGoal =
+depthLimitedSearch :: (state -> [state]) -> state ->
+                      (state -> Bool) -> Int -> (Maybe [state],SearchStats)
+depthLimitedSearch _ _ _ _ {-expandState startState isGoal depthLimit-} =
+  undefined
+
+iterativeDeepeningSearch :: (state -> [state]) -> state ->
+                            (state -> Bool) -> (Maybe [state],SearchStats)
+iterativeDeepeningSearch _ _ _ {-expandState startState isGoal-} =
+  undefined
+
+aStarSearch :: forall cost state. (Real cost, Ord state) =>
+               (state -> [(state,cost)]) -> (state -> cost) -> state ->
+               (state -> Bool) -> (Maybe ([state],cost),SearchStats)
+aStarSearch expandState heuristic startState isGoal =
   ucgs (H.singleton (heuristic startState,(0,[startState])) ::
            H.MinPrioHeap cost (cost,[state]))
   (S.empty) (SearchStats 0 0)
@@ -107,3 +117,4 @@ aStarGraphSearch expandState heuristic startState isGoal =
                                                   (current_cost+cost,state:current_path))) from_here)
                      (S.insert current_state explored_set)
                      (SearchStats (n+1) (s-1+length from_here))
+

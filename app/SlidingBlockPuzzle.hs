@@ -71,12 +71,12 @@ main = do
 
   let x2 = SBP 3 1 2 $ listArray (0,2) $ map (listArray (0,2)) [[3,4,7],[5,1,0],[6,8,2]]
   putStrLn "3x3 puzzle with A* search using misplaced distance:"
-  print $ aStarGraphSearch (map (\z -> (z,1)) . expandSlidingBlockPuzzle) misplacedDistance x2 (==solvedSlidingBlockPuzzle 3)
+  print $ aStarSearch (map (\z -> (z,1)) . expandSlidingBlockPuzzle) misplacedDistance x2 (==solvedSlidingBlockPuzzle 3)
   putStrLn "3x3 puzzle with A* search using Gaschnig distance:"
-  print $ aStarGraphSearch (map (\z -> (z,1)) . expandSlidingBlockPuzzle) gaschnigDistance x2 (==solvedSlidingBlockPuzzle 3)
+  print $ aStarSearch (map (\z -> (z,1)) . expandSlidingBlockPuzzle) gaschnigDistance x2 (==solvedSlidingBlockPuzzle 3)
   putStrLn "3x3 puzzle with A* search using Manhattan distance:"
-  print $ aStarGraphSearch (map (\z -> (z,1)) . expandSlidingBlockPuzzle) manhattanDistance x2 (==solvedSlidingBlockPuzzle 3)
+  print $ aStarSearch (map (\z -> (z,1)) . expandSlidingBlockPuzzle) manhattanDistance x2 (==solvedSlidingBlockPuzzle 3)
 
   putStrLn "4x4 puzzle using max of Manhattan & Gaschnig distances (slow):"
   let x3 = SBP 4 1 3 $ listArray (0,3) $ map (listArray (0,3)) [[3,10,4,7],[13,5,1,0],[15,11,9,14],[12,6,8,2]]
-  print $ aStarGraphSearch (map (\z -> (z,1)) . expandSlidingBlockPuzzle) (\z -> max (manhattanDistance z) (gaschnigDistance z)) x3 (==solvedSlidingBlockPuzzle 4)
+  print $ aStarSearch (map (\z -> (z,1)) . expandSlidingBlockPuzzle) (\z -> max (manhattanDistance z) (gaschnigDistance z)) x3 (==solvedSlidingBlockPuzzle 4)

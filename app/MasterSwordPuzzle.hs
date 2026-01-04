@@ -158,10 +158,10 @@ main = do
   print $ breadthFirstGraphSearch expandMasterSwordPuzzle startMasterSwordPuzzle isGoalMasterSwordPuzzle
 
   putStrLn "A* search with manhattan heuristic:"
-  print $ aStarGraphSearch (map (\x -> (x,1)) . expandMasterSwordPuzzle) manhattanHeuristic startMasterSwordPuzzle isGoalMasterSwordPuzzle
+  print $ aStarSearch (map (\x -> (x,1)) . expandMasterSwordPuzzle) manhattanHeuristic startMasterSwordPuzzle isGoalMasterSwordPuzzle
 
   putStrLn "A* search with smarter heuristic:"
-  print $ aStarGraphSearch (map (\x -> (x,1)) . expandMasterSwordPuzzle) smarterHeuristic startMasterSwordPuzzle isGoalMasterSwordPuzzle
+  print $ aStarSearch (map (\x -> (x,1)) . expandMasterSwordPuzzle) smarterHeuristic startMasterSwordPuzzle isGoalMasterSwordPuzzle
 
   putStrLn "A* search with brainy heuristic:"
-  print $ aStarGraphSearch (map (\x -> (x,1)) . expandMasterSwordPuzzle) brainyHeuristic startMasterSwordPuzzle isGoalMasterSwordPuzzle
+  print $ aStarSearch (map (\x -> (x,1)) . expandMasterSwordPuzzle) brainyHeuristic startMasterSwordPuzzle isGoalMasterSwordPuzzle
