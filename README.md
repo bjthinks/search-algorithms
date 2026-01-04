@@ -1,6 +1,12 @@
 # Search algorithms implemented in Haskell
 
-These programs are in the Public Domain.
+Each of these algorithms reports the number of search nodes that
+were expanded and the number of states that were stored in memory
+when the search finishes.
+
+```
+data SearchStats = SearchStats !Int !Int deriving Show
+```
 
 Breadth first: each step consists of expanding the entire frontier,
 checking if a goal has been reached, and, if not, constructing a new
@@ -97,3 +103,5 @@ known ahead of time, and the point of the search is only to find the
 shortest path.  Requires predecessors of a state to be computable
 (always true if state space is an undirected graph).  Can be done in
 any of the breadth first or uniform cost variants, including A*.
+
+These programs are in the Public Domain.
