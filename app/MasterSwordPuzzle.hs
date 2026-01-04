@@ -5,7 +5,7 @@ import Data.Maybe (catMaybes)
 import Search
 
 data Location = Location Int Int
-              deriving (Show,Eq,Ord)
+  deriving (Show,Eq,Ord)
 
 isValidLoc :: Location -> Bool
 isValidLoc (Location x y)
@@ -28,10 +28,11 @@ instance Num Location where
   signum (Location a b) = Location (signum a) (signum b)
   fromInteger a = Location (fromInteger a) (fromInteger a)
 
-data MasterSwordPuzzle = MSP { linkLocation :: Location,
-                               fstGLocation :: Location,
-                               sndGLocation :: Location }
-                         deriving (Eq,Ord)
+data MasterSwordPuzzle =
+  MSP { linkLocation :: Location
+      , fstGLocation :: Location
+      , sndGLocation :: Location
+      } deriving (Eq,Ord)
 
 instance Show MasterSwordPuzzle where
   show p =
@@ -71,41 +72,39 @@ moveBy :: MasterSwordPuzzle -> Location -> Maybe MasterSwordPuzzle
 -- when the move occurs, check if p2 and p3 are valid
 -- if so, the result is p3
 -- otherwise, it is still complicated.....
-moveBy p delta = let newLinkLocation = linkLocation p + delta
-                     intermediateState = p { linkLocation = newLinkLocation }
-                     newFstGLocation = fstGLocation p - delta
-                     newSndGLocation = sndGLocation p + delta
-                     bump = newFstGLocation == newSndGLocation ||
-                            newFstGLocation == sndGLocation p ||
-                            newSndGLocation == fstGLocation p
-                     splat = newLinkLocation == newFstGLocation ||
-                             newLinkLocation == newSndGLocation
-                     afterFst = intermediateState {
-                       fstGLocation = newFstGLocation }
-                     afterSnd = intermediateState {
-                       sndGLocation = newSndGLocation }
-                     afterBoth = afterFst {
-                       sndGLocation = newSndGLocation }
-                 in if not (isValid intermediateState) then Nothing else
-                      if bump then Just intermediateState else
-                        if splat then Nothing else
-                          case (isValid afterFst,isValid afterSnd) of
-                            (False,False) -> Just intermediateState
-                            (False,True) -> Just afterSnd
-                            (True,False) -> Just afterFst
-                            (True,True) -> Just afterBoth
+moveBy p delta =
+  let newLinkLocation = linkLocation p + delta
+      intermediateState = p { linkLocation = newLinkLocation }
+      newFstGLocation = fstGLocation p - delta
+      newSndGLocation = sndGLocation p + delta
+      bump = newFstGLocation == newSndGLocation ||
+             newFstGLocation == sndGLocation p ||
+             newSndGLocation == fstGLocation p
+      splat = newLinkLocation == newFstGLocation ||
+              newLinkLocation == newSndGLocation
+      afterFst = intermediateState { fstGLocation = newFstGLocation }
+      afterSnd = intermediateState { sndGLocation = newSndGLocation }
+      afterBoth = afterFst { sndGLocation = newSndGLocation }
+  in if not (isValid intermediateState) then Nothing else
+       if bump then Just intermediateState else
+         if splat then Nothing else
+           case (isValid afterFst,isValid afterSnd) of
+             (False,False) -> Just intermediateState
+             (False,True) -> Just afterSnd
+             (True,False) -> Just afterFst
+             (True,True) -> Just afterBoth
 
 possibleDeltas :: [Location]
-possibleDeltas = [Location (-1) 0,Location 1 0,
-                  Location 0 (-1),Location 0 1]
+possibleDeltas = [Location (-1) 0,Location 1 0,Location 0 (-1),Location 0 1]
 
 expandMasterSwordPuzzle :: MasterSwordPuzzle -> [MasterSwordPuzzle]
 expandMasterSwordPuzzle p = catMaybes $ map (moveBy p) possibleDeltas
 
 startMasterSwordPuzzle :: MasterSwordPuzzle
-startMasterSwordPuzzle = MSP { linkLocation = Location 2 3 ,
-                               fstGLocation = Location 2 1 ,
-                               sndGLocation = Location 2 5 }
+startMasterSwordPuzzle =
+  MSP { linkLocation = Location 2 3
+      , fstGLocation = Location 2 1
+      , sndGLocation = Location 2 5 }
 
 isGoalMasterSwordPuzzle :: MasterSwordPuzzle -> Bool
 isGoalMasterSwordPuzzle p =
@@ -120,7 +119,7 @@ manhattanHeuristic p =
       g2 = Location 3 1
       manhattanDist (Location a b) (Location c d) = abs (a-c) + abs (b-d)
   in min (max (manhattanDist f g1) (manhattanDist s g2))
-         (max (manhattanDist f g2) (manhattanDist s g1))
+     (max (manhattanDist f g2) (manhattanDist s g1))
 
 -- Minimum for the two assignments of goals:
 -- max of x distance + max of y distance

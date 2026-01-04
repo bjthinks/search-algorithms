@@ -6,11 +6,11 @@ import Data.Maybe (fromJust)
 import Search
 
 data SlidingBlockPuzzle = SBP Int Int Int (Array Int (Array Int Int))
-                          deriving (Eq,Ord)
+  deriving (Eq,Ord)
 
 instance Show SlidingBlockPuzzle where
   show (SBP _ _ _ b) = ('\n':) $ unlines $
-                       map (unwords . map show . elems) (elems b)
+    map (unwords . map show . elems) (elems b)
 
 solvedSlidingBlockPuzzle :: Int -> SlidingBlockPuzzle
 solvedSlidingBlockPuzzle n
@@ -47,21 +47,21 @@ gaschnigDistance :: SlidingBlockPuzzle -> Int
 gaschnigDistance (SBP n r c d)
   | d_list == [0..n*n-1] = 0
   | otherwise = 1 + gaschnigDistance (swap (r',c'))
-    where
-      d_list = concat (map elems (elems d))
-      badIndex = bi (tail d_list) 1
-      bi (x:xs) y
-        | x == y = bi xs (y+1)
-        | otherwise = y
-      bi [] _ = undefined
-      zzpos = fromJust $ elemIndex (n*r+c) d_list
-      (r',c')
-        | r == 0 && c == 0 = (div badIndex n,mod badIndex n)
-        | otherwise = (div zzpos n,mod zzpos n)
-      swap (x,y)
-        | x == r = SBP n x y $ d // [(r,(d!r) // [(y,0),(c,(d!r)!y)])]
-        | otherwise = SBP n x y $ d // [(r,(d!r) // [(c,(d!x)!y)]),
-                                        (x,(d!x) // [(y,0)])]
+  where
+    d_list = concat (map elems (elems d))
+    badIndex = bi (tail d_list) 1
+    bi (x:xs) y
+      | x == y = bi xs (y+1)
+      | otherwise = y
+    bi [] _ = undefined
+    zzpos = fromJust $ elemIndex (n*r+c) d_list
+    (r',c')
+      | r == 0 && c == 0 = (div badIndex n,mod badIndex n)
+      | otherwise = (div zzpos n,mod zzpos n)
+    swap (x,y)
+      | x == r = SBP n x y $ d // [(r,(d!r) // [(y,0),(c,(d!r)!y)])]
+      | otherwise = SBP n x y $ d // [(r,(d!r) // [(c,(d!x)!y)]),
+                                      (x,(d!x) // [(y,0)])]
 
 main :: IO ()
 main = do
