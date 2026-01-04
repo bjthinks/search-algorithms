@@ -1,13 +1,7 @@
-{-# LANGUAGE ScopedTypeVariables #-}
-
 module Main where
 
 import Data.List
-import Data.Array
-import Data.Maybe (fromJust,catMaybes)
-import qualified Data.Set as S
-import qualified Data.Heap as H
-import System.IO.Unsafe
+import Data.Maybe (catMaybes)
 import Search
 
 data Location = Location Int Int
@@ -108,6 +102,7 @@ possibleDeltas = [Location (-1) 0,Location 1 0,
 expandMasterSwordPuzzle :: MasterSwordPuzzle -> [MasterSwordPuzzle]
 expandMasterSwordPuzzle p = catMaybes $ map (moveBy p) possibleDeltas
 
+startMasterSwordPuzzle :: MasterSwordPuzzle
 startMasterSwordPuzzle = MSP { linkLocation = Location 2 3 ,
                                fstGLocation = Location 2 1 ,
                                sndGLocation = Location 2 5 }
