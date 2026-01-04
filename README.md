@@ -14,11 +14,11 @@ revisiting nodes are potentially very large.
 
 ```
 breadthFirstTreeSearch :: (state -> [state]) -> state ->
-                          (state -> Bool) -> (Maybe [state],Stats)
+                          (state -> Bool) -> (Maybe [state],SearchStats)
 breadthFirstTreeSearch expandState startState isGoal
 
 breadthFirstGraphSearch :: Ord state => (state -> [state]) -> state ->
-                           (state -> Bool) -> (Maybe [state],Stats)
+                           (state -> Bool) -> (Maybe [state],SearchStats)
 breadthFirstGraphSearch expandState startState isGoal
 ```
 
@@ -38,12 +38,12 @@ variant is not recommended on graphs.
 ```
 uniformCostTreeSearch :: forall cost state. Real cost =>
                          (state -> [(state,cost)]) -> state ->
-                         (state -> Bool) -> (Maybe ([state],cost),Stats)
+                         (state -> Bool) -> (Maybe ([state],cost),SearchStats)
 uniformCostTreeSearch expandState startState isGoal
 
 uniformCostGraphSearch :: forall cost state. (Real cost, Ord state) =>
                          (state -> [(state,cost)]) -> state ->
-                         (state -> Bool) -> (Maybe ([state],cost),Stats)
+                         (state -> Bool) -> (Maybe ([state],cost),SearchStats)
 uniformCostGraphSearch expandState startState isGoal
 ```
 
@@ -63,7 +63,7 @@ depth-limited search is that it takes very little memory to run.
 
 ```
 depthLimitedSearch :: (state -> [state]) -> state ->
-                      (state -> Bool) -> Int -> (Maybe [state],Stats)
+                      (state -> Bool) -> Int -> (Maybe [state],SearchStats)
 depthLimitedSearch expandState startState isGoal depthLimit
 ```
 
@@ -75,7 +75,7 @@ hold in memory.
 
 ```
 iterativeDeepeningSearch :: (state -> [state]) -> state ->
-                            (state -> Bool) -> (Maybe [state],Stats)
+                            (state -> Bool) -> (Maybe [state],SearchStats)
 iterativeDeepeningSearch expandState startState isGoal
 ```
 
@@ -86,7 +86,7 @@ to the goal.
 ```
 aStarGraphSearch :: forall cost state. (Real cost, Ord state) =>
                     (state -> [(state,cost)]) -> (state -> cost) -> state ->
-                    (state -> Bool) -> (Maybe ([state],cost),Stats)
+                    (state -> Bool) -> (Maybe ([state],cost),SearchStats)
 aStarGraphSearch expandState heuristic startState isGoal
 ```
 
