@@ -113,7 +113,7 @@ uniformCostTreeSearch expand start isGoal =
           in if isGoal current_state
              then (Just (current_path,current_cost),stats)
              else ucts (H.union h' $ H.fromList $
-                  map (\(s,c) -> (current_cost+c,s:current_path)) $ from_here)
+                  map (\(state,cost) -> (current_cost+cost,state:current_path)) $ from_here)
                   (S (n+1) (s+length from_here))
 
 uniformCostGraphSearch :: forall cost state. (Real cost, Ord state) =>
@@ -134,7 +134,7 @@ uniformCostGraphSearch expand start isGoal =
              else if S.member current_state explored_set
                   then ucgs h' explored_set (S n (s-1))
                   else ucgs (H.union h' $ H.fromList $
-                             map (\(s,c) -> (current_cost+c,s:current_path))
+                             map (\(state,cost) -> (current_cost+cost,state:current_path))
                              from_here)
                        (S.insert current_state explored_set)
                        (S (n+1) (s-1+length from_here))
@@ -158,8 +158,8 @@ aStarGraphSearch expand lower_bound start isGoal =
              else if S.member current_state explored_set
                   then ucgs h' explored_set (S n (s-1))
                   else ucgs (H.union h' $ H.fromList $
-                             map (\(s,c) -> (current_cost+c+lower_bound s,
-                                             (current_cost+c,s:current_path)))
+                             map (\(state,cost) -> (current_cost+cost+lower_bound state,
+                                             (current_cost+cost,state:current_path)))
                              from_here)
                        (S.insert current_state explored_set)
                        (S (n+1) (s-1+length from_here))

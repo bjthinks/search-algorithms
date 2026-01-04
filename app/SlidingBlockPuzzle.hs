@@ -16,11 +16,11 @@ solvedSlidingBlockPuzzle :: Int -> SlidingBlockPuzzle
 solvedSlidingBlockPuzzle n
   | n > 0 = SBP n 0 0 $
             listArray (0,n-1) [listArray (0,n-1) [a..b] |
-                               (a,b) <- zip [0,n..n^2-n] [n-1,2*n-1..n^2-1]]
+                               (a,b) <- zip [0,n..n*n-n] [n-1,2*n-1..n*n-1]]
   | otherwise = error "Sliding block puzzle of nonpositive size"
 
 expandSlidingBlockPuzzle :: SlidingBlockPuzzle -> [SlidingBlockPuzzle]
-expandSlidingBlockPuzzle p@(SBP n r c d)
+expandSlidingBlockPuzzle (SBP n r c d)
   = map swap $ filter valid $ [(r-1,c),(r+1,c),(r,c-1),(r,c+1)]
   where
     valid (x,y) = x >= 0 && x < n && y >= 0 && y < n
@@ -31,11 +31,11 @@ expandSlidingBlockPuzzle p@(SBP n r c d)
 
 misplacedDistance :: SlidingBlockPuzzle -> Int
 misplacedDistance (SBP n _ _ d)
-  = length $ filter ((/=0) . snd) $ filter (uncurry (/=)) $ zip [0..n^2-1] (concat $ map elems $ elems d)
+  = length $ filter ((/=0) . snd) $ filter (uncurry (/=)) $ zip [0..n*n-1] (concat $ map elems $ elems d)
 
 manhattanDistance :: SlidingBlockPuzzle -> Int
 manhattanDistance (SBP n _ _ arr)
-  = sum [l1distance (properLocation k) (actualLocation k) | k <- [1..n^2-1]]
+  = sum [l1distance (properLocation k) (actualLocation k) | k <- [1..n*n-1]]
   where
     l1distance (a,b) (c,d) = abs (a-c) + abs (b-d)
     properLocation k = (div k n, mod k n)
@@ -44,8 +44,8 @@ manhattanDistance (SBP n _ _ arr)
                  assocs arr
 
 gaschnigDistance :: SlidingBlockPuzzle -> Int
-gaschnigDistance p@(SBP n r c d)
-  | d_list == [0..n^2-1] = 0
+gaschnigDistance (SBP n r c d)
+  | d_list == [0..n*n-1] = 0
   | otherwise = 1 + gaschnigDistance (swap (r',c'))
     where
       d_list = concat (map elems (elems d))
@@ -53,6 +53,7 @@ gaschnigDistance p@(SBP n r c d)
       bi (x:xs) y
         | x == y = bi xs (y+1)
         | otherwise = y
+      bi [] _ = undefined
       zzpos = fromJust $ elemIndex (n*r+c) d_list
       (r',c')
         | r == 0 && c == 0 = (div badIndex n,mod badIndex n)
