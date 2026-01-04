@@ -63,7 +63,7 @@ depth-limited search is that it takes very little memory to run.
 
 ```
 depthLimitedSearch :: (state -> [state]) -> state ->
-                          (state -> Bool) -> Int -> (Maybe [state],Stats)
+                      (state -> Bool) -> Int -> (Maybe [state],Stats)
 depthLimitedSearch expandState startState isGoal depthLimit
 ```
 
