@@ -54,13 +54,30 @@ states, but it never makes sense to use "depth first graph search"
 in this sense because breadth first is better.  "Tree" variant checks
 either nothing or nodes along the current history for duplication.
 Neighbors is a list of states and actions. Costs are implicitly 1.
+Plain depth first search is not implemented because it isn't a very
+useful algorithm for most problems.
 
 Closely related depth-limited search adds a depth limit, and informs
-the user if no solution exists, or if the cutoff was reached.
+the user if no solution was found. The main reason to use a
+depth-limited search is that it takes very little memory to run.
+
+```
+depthLimitedSearch :: (state -> [state]) -> state ->
+                          (state -> Bool) -> Int -> (Maybe [state],Stats)
+depthLimitedSearch expandState startState isGoal depthLimit
+```
 
 Iterative deepening depth first: Repeat depth-limited search as long
 as the result is "cutoff reached", increasing depth limit by 1 each
-time.
+time. This is an efficient search algorithm for finding an optimal
+solution when the states that need to be explored are too large to
+hold in memory.
+
+```
+iterativeDeepeningSearch :: (state -> [state]) -> state ->
+                            (state -> Bool) -> (Maybe [state],Stats)
+iterativeDeepeningSearch expandState startState isGoal
+```
 
 A*: an informed search; improvement on uniform cost search that also
 takes into account a lower bound on the cost from the current state
