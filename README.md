@@ -2,8 +2,6 @@
 
 These programs are in the Public Domain.
 
-## Descriptions of various search algorithms
-
 Breadth first: each step consists of expanding the entire frontier,
 checking if a goal has been reached, and, if not, constructing a new
 frontier.  This can be done incrementally with a FIFO queue.
@@ -13,6 +11,16 @@ states; tree variant does not.  Tree variant is not recommended on
 graphs, as the space savings of not storing the explored set are
 smaller than the cost to store the frontier, and the time costs of
 revisiting nodes are potentially very large.
+
+```
+breadthFirstTreeSearch :: (state -> [state]) -> state ->
+                          (state -> Bool) -> (Maybe [state],Stats)
+breadthFirstTreeSearch expandState startState isGoal
+
+breadthFirstGraphSearch :: Ord state => (state -> [state]) -> state ->
+                           (state -> Bool) -> (Maybe [state],Stats)
+breadthFirstGraphSearch expandState startState isGoal
+```
 
 Uniform cost: each step consists of locating the node on the frontier
 with the lowest cost, checking if it is a goal, removing it from the
@@ -26,6 +34,18 @@ always generated in increasing order of cost.)  This is accomplished
 by applying the goal test when a state is selected for expansion, not
 when it is first generated.  As in breadth first search, the tree
 variant is not recommended on graphs.
+
+```
+uniformCostTreeSearch :: forall cost state. Real cost =>
+                         (state -> [(state,cost)]) -> state ->
+                         (state -> Bool) -> (Maybe ([state],cost),Stats)
+uniformCostTreeSearch expandState startState isGoal
+
+uniformCostGraphSearch :: forall cost state. (Real cost, Ord state) =>
+                         (state -> [(state,cost)]) -> state ->
+                         (state -> Bool) -> (Maybe ([state],cost),Stats)
+uniformCostGraphSearch expandState startState isGoal
+```
 
 Depth first: each step consists of expanding the deepest unexpanded
 node, checking if a goal has been reached, and backing up only when
@@ -45,6 +65,13 @@ time.
 A*: an informed search; improvement on uniform cost search that also
 takes into account a lower bound on the cost from the current state
 to the goal.
+
+```
+aStarGraphSearch :: forall cost state. (Real cost, Ord state) =>
+                    (state -> [(state,cost)]) -> (state -> cost) -> state ->
+                    (state -> Bool) -> (Maybe ([state],cost),Stats)
+aStarGraphSearch expandState heuristic startState isGoal
+```
 
 There are also Iterative deepening A* and Memory-bounded A* searches.
 
