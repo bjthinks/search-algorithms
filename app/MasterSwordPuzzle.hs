@@ -67,11 +67,6 @@ isValid p =
      fstG /= sndG
 
 moveBy :: MasterSwordPuzzle -> Location -> Maybe MasterSwordPuzzle
--- it's more complicated than this!!!
--- if Link's target position is valid, then the move can occur
--- when the move occurs, check if p2 and p3 are valid
--- if so, the result is p3
--- otherwise, it is still complicated.....
 moveBy p delta =
   let newLinkLocation = linkLocation p + delta
       intermediateState = p { linkLocation = newLinkLocation }
@@ -123,8 +118,8 @@ manhattanHeuristic p =
 
 -- Minimum for the two assignments of goals:
 -- max of x distance + max of y distance
-smarterHeuristic :: MasterSwordPuzzle -> Int
-smarterHeuristic p =
+betterHeuristic :: MasterSwordPuzzle -> Int
+betterHeuristic p =
   let f = fstGLocation p
       s = sndGLocation p
       g1 = Location 1 1
@@ -136,8 +131,8 @@ smarterHeuristic p =
 -- Minimum for the two assignments of goals:
 -- x_heuristic + y_heuristic
 -- x_heuristic is larger of x coords if opposite sign, or sum if same sign
-brainyHeuristic :: MasterSwordPuzzle -> Int
-brainyHeuristic p =
+bestHeuristic :: MasterSwordPuzzle -> Int
+bestHeuristic p =
   let f = fstGLocation p
       s = sndGLocation p
       g1 = Location 1 1
@@ -152,16 +147,23 @@ brainyHeuristic p =
 -- R D U U U L L D D D R U, or
 -- L D U U U R R D D D L U
 
+prettyPrint :: SearchStats -> String
+prettyPrint (SearchStats ne ss) =
+  show ne ++ " nodes expanded, " ++ show ss ++ " states stored"
+
 main :: IO ()
 main = do
-  putStrLn "Breadth first search:"
-  print $ breadthFirstGraphSearch expandMasterSwordPuzzle startMasterSwordPuzzle isGoalMasterSwordPuzzle
+  putStr "Breadth first tree\t"
+  putStrLn $ prettyPrint $ snd $ breadthFirstTreeSearch expandMasterSwordPuzzle startMasterSwordPuzzle isGoalMasterSwordPuzzle
 
-  putStrLn "A* search with manhattan heuristic:"
-  print $ aStarSearch (map (\x -> (x,1)) . expandMasterSwordPuzzle) manhattanHeuristic startMasterSwordPuzzle isGoalMasterSwordPuzzle
+  putStr "Breadth first graph\t"
+  putStrLn $ prettyPrint $ snd $ breadthFirstGraphSearch expandMasterSwordPuzzle startMasterSwordPuzzle isGoalMasterSwordPuzzle
 
-  putStrLn "A* search with smarter heuristic:"
-  print $ aStarSearch (map (\x -> (x,1)) . expandMasterSwordPuzzle) smarterHeuristic startMasterSwordPuzzle isGoalMasterSwordPuzzle
+  putStr "A* search (manhattan)\t"
+  putStrLn $ prettyPrint $ snd $ aStarSearch (map (\x -> (x,1)) . expandMasterSwordPuzzle) manhattanHeuristic startMasterSwordPuzzle isGoalMasterSwordPuzzle
 
-  putStrLn "A* search with brainy heuristic:"
-  print $ aStarSearch (map (\x -> (x,1)) . expandMasterSwordPuzzle) brainyHeuristic startMasterSwordPuzzle isGoalMasterSwordPuzzle
+  putStr "A* search (better)\t"
+  putStrLn $ prettyPrint $ snd $ aStarSearch (map (\x -> (x,1)) . expandMasterSwordPuzzle) betterHeuristic startMasterSwordPuzzle isGoalMasterSwordPuzzle
+
+  putStr "A* search (best)\t"
+  putStrLn $ prettyPrint $ snd $ aStarSearch (map (\x -> (x,1)) . expandMasterSwordPuzzle) bestHeuristic startMasterSwordPuzzle isGoalMasterSwordPuzzle
