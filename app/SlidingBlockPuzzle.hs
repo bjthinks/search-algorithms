@@ -63,20 +63,29 @@ gaschnigDistance (SBP n r c d)
       | otherwise = SBP n x y $ d // [(r,(d!r) // [(c,(d!x)!y)]),
                                       (x,(d!x) // [(y,0)])]
 
+prettyPrint :: SearchStats -> String
+prettyPrint (SearchStats ne ss) =
+  show ne ++ " nodes expanded, " ++ show ss ++ " states stored"
+
 main :: IO ()
 main = do
-  let x1 = SBP 2 0 0 $ listArray (0,1) $ map (listArray (0,1)) [[0,3],[1,2]]
-  putStrLn "2x2 puzzle with breadth first search:"
-  print $ breadthFirstTreeSearch {-(map (\z -> (z,1)) .-}( expandSlidingBlockPuzzle) x1 (==solvedSlidingBlockPuzzle 2)
+  let unsolvedPuzzle = SBP 3 1 2 $ listArray (0,2) $ map (listArray (0,2)) [[3,4,7],[5,1,0],[6,8,2]]
 
-  let x2 = SBP 3 1 2 $ listArray (0,2) $ map (listArray (0,2)) [[3,4,7],[5,1,0],[6,8,2]]
-  putStrLn "3x3 puzzle with A* search using misplaced distance:"
-  print $ aStarSearch (map (\z -> (z,1)) . expandSlidingBlockPuzzle) misplacedDistance x2 (==solvedSlidingBlockPuzzle 3)
-  putStrLn "3x3 puzzle with A* search using Gaschnig distance:"
-  print $ aStarSearch (map (\z -> (z,1)) . expandSlidingBlockPuzzle) gaschnigDistance x2 (==solvedSlidingBlockPuzzle 3)
-  putStrLn "3x3 puzzle with A* search using Manhattan distance:"
-  print $ aStarSearch (map (\z -> (z,1)) . expandSlidingBlockPuzzle) manhattanDistance x2 (==solvedSlidingBlockPuzzle 3)
+  putStr "Breadth first tree\t"
+  putStrLn $ prettyPrint $ snd $ breadthFirstTreeSearch expandSlidingBlockPuzzle unsolvedPuzzle (==solvedSlidingBlockPuzzle 3)
 
-  putStrLn "4x4 puzzle using max of Manhattan & Gaschnig distances (slow):"
-  let x3 = SBP 4 1 3 $ listArray (0,3) $ map (listArray (0,3)) [[3,10,4,7],[13,5,1,0],[15,11,9,14],[12,6,8,2]]
-  print $ aStarSearch (map (\z -> (z,1)) . expandSlidingBlockPuzzle) (\z -> max (manhattanDistance z) (gaschnigDistance z)) x3 (==solvedSlidingBlockPuzzle 4)
+  putStr "Breadth first graph\t"
+  putStrLn $ prettyPrint $ snd $ breadthFirstGraphSearch expandSlidingBlockPuzzle unsolvedPuzzle (==solvedSlidingBlockPuzzle 3)
+
+  putStr "A* search (misplaced)\t"
+  putStrLn $ prettyPrint $ snd $ aStarSearch (map (\z -> (z,1)) . expandSlidingBlockPuzzle) misplacedDistance unsolvedPuzzle (==solvedSlidingBlockPuzzle 3)
+
+  putStr "A* search (Gaschnig)\t"
+  putStrLn $ prettyPrint $ snd $ aStarSearch (map (\z -> (z,1)) . expandSlidingBlockPuzzle) gaschnigDistance unsolvedPuzzle (==solvedSlidingBlockPuzzle 3)
+
+  putStr "A* search (Manhattan)\t"
+  putStrLn $ prettyPrint $ snd $ aStarSearch (map (\z -> (z,1)) . expandSlidingBlockPuzzle) manhattanDistance unsolvedPuzzle (==solvedSlidingBlockPuzzle 3)
+
+  --putStrLn "4x4 puzzle using max of Manhattan & Gaschnig distances (slow):"
+  --let unsolvedBigPuzzle = SBP 4 1 3 $ listArray (0,3) $ map (listArray (0,3)) [[3,10,4,7],[13,5,1,0],[15,11,9,14],[12,6,8,2]]
+  --print $ snd $ aStarSearch (map (\z -> (z,1)) . expandSlidingBlockPuzzle) (\z -> max (manhattanDistance z) (gaschnigDistance z)) unsolvedBigPuzzle (==solvedSlidingBlockPuzzle 4)
