@@ -103,5 +103,3 @@ known ahead of time, and the point of the search is only to find the
 shortest path.  Requires predecessors of a state to be computable
 (always true if state space is an undirected graph).  Can be done in
 any of the breadth first or uniform cost variants, including A*.
-
-These programs are in the Public Domain.
